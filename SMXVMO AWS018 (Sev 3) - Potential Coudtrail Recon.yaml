@@ -1,0 +1,42 @@
+displayName: SMXVMO AWS018 (Sev 3) - Potential Coudtrail Recon
+description: ""
+severity: Medium
+enabled: true
+query: |-
+  AWSCloudTrail_CL_FieldTrimming
+  | where ErrorCode == "Client.UnauthorizedOperation"
+  | summarize count() by TimeGenerated,EventName,ErrorCode,ErrorMessage, RequestParameters, UserIdentityArn, UserAgent, SourceIpAddress
+  | where count_ > 10
+queryFrequency: PT1H
+queryPeriod: PT1H
+triggerOperator: GreaterThan
+triggerThreshold: 0
+suppressionDuration: PT5H
+suppressionEnabled: false
+startTimeUtc: 
+tactics:
+- Reconnaissance
+techniques: []
+subTechniques: []
+alertRuleTemplateName: 
+incidentConfiguration:
+  createIncident: true
+  groupingConfiguration:
+    enabled: false
+    reopenClosedIncident: false
+    lookbackDuration: PT5H
+    matchingMethod: AllEntities
+    groupByEntities: []
+    groupByAlertDetails: []
+    groupByCustomDetails: []
+eventGroupingSettings:
+  aggregationKind: SingleAlert
+alertDetailsOverride: 
+customDetails: 
+entityMappings:
+- entityType: Account
+  fieldMappings:
+  - identifier: FullName
+    columnName: UserIdentityArn
+sentinelEntitiesMappings: 
+templateVersion: 
